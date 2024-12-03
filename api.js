@@ -206,17 +206,56 @@ router.post("/signin", function(request, response){
     
 });
 
-router.post("/getmemerdashboard", function(request, response){
+router.post("/getmemerdashboard",async function(request, response){
 
-    let order= {...request.body}
-    dboperations.getmemberdashboard(order).then(result => {
+    try
+    {
+      const token1 = request.header('Authorization');
+      const MemberUserID = request.body.UserID;
+
+  
+      console.log(token1);
+      if (!token1) return res.status(401).json({ error: 'Access denied' });
     
-       console.log(result.recordsets);
-      response.json(result["recordsets"][0]);
+      try
+       {
+  
+          console.log('Secrect key');
+          const decoded = jwt.verify(token1, 'msecret-keys@9128');
+          console.log(' Secrect key ');
+          console.log(decoded);
+       
+         
+          //request.USERID = decoded.USERID;
+           if(decoded.USERID != null)
+           {
+  
+               const conn= await sql.connect(config);
+               const resp =await conn.request()
+               .input("UserID",MemberUserID)
+               .execute("USP_GetCustomerDashBoardDtls");
+  
+              console.log(resp.recordsets[0]); 
+  
+             
+           
+            return  response.status(200).json({ data: resp.recordsets[0] });
+           }
+           else{
+               res.status(200).json({ status: 'Invalid Secrect key' });
+           }
+        //  next();
+          } catch (error)
           
-    
-    });
-    
+          {
+              res.status(401).json({ status: 'Session expaired Invalid Secrect key' });
+          }
+          
+    }
+    catch(error){
+  
+    }
+   
 });
 
 
