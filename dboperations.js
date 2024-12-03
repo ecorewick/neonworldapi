@@ -76,7 +76,7 @@ async function signinapi(prod){
             .input("USERID",prod.email)
             .input("PASSWORD",prod.password)
             .input("IP",prod.ip)
-            .input("URL",url)
+            .input("URL",prod.url)
 
             .input("DeviceID",prod.diviceid)
             .input("Brand",prod.brand)
