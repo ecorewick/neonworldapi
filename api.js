@@ -235,11 +235,11 @@ router.post("/getmemerdashboard",async function(request, response){
                .input("UserID",MemberUserID)
                .execute("USP_GetCustomerDashBoardDtls");
   
-              console.log(resp.recordsets[0]); 
+              console.log(resp.recordsets); 
   
              
            
-            return  response.status(200).json({ data: resp.recordsets[0] });
+            return  response.status(200).json({ data: resp.recordsets });
            }
            else{
                res.status(200).json({ status: 'Invalid Secrect key' });
