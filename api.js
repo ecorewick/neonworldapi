@@ -259,6 +259,47 @@ router.post("/getmemerdashboard",async function(request, response){
 });
 
 
+router.post("/loginverify", function(request, response){
+
+    try{
+
+        console.log('ccc1');
+       // let order= {...request.body}
+
+        const token1 = request.header('Authorization');
+        console.log(token1);
+        if (!token1) return res.status(401).json({ error: 'Access denied' });
+        console.log('ccc2');
+        try {
+            console.log('ccc3');
+            const decoded = jwt.verify(token1, 'msecret-keys@9128');
+            console.log(decoded);
+            console.log('ccc4');
+            request.USERID = decoded.USERID;
+            if(decoded.USERID != null)
+            {
+                response.status(200).json({ status: 'Valid token' });
+            }
+            else{
+                response.status(200).json({ status: 'Invalid token' });
+            }
+           next();
+            } catch (error) {
+                response.status(401).json({ status: 'Session expaired Invalid token' });
+            }
+            
+      
+
+      
+
+    }
+    catch(error){
+
+    }
+   
+    
+});
+
 
 
 
@@ -389,47 +430,6 @@ router.post("/welcome", function(request, response){
 });
 
 
-
-router.post("/loginverify", function(request, response){
-
-    try{
-
-        console.log('ccc1');
-       // let order= {...request.body}
-
-        const token1 = request.header('Authorization');
-        console.log(token1);
-        if (!token1) return res.status(401).json({ error: 'Access denied' });
-        console.log('ccc2');
-        try {
-            console.log('ccc3');
-            const decoded = jwt.verify(token1, 'msecret-keys@9128');
-            console.log(decoded);
-            console.log('ccc4');
-            request.USERID = decoded.USERID;
-            if(decoded.USERID != null)
-            {
-                response.status(200).json({ status: 'Valid token' });
-            }
-            else{
-                response.status(200).json({ status: 'Invalid token' });
-            }
-           next();
-            } catch (error) {
-                response.status(401).json({ status: 'Session expaired Invalid token' });
-            }
-            
-      
-
-      
-
-    }
-    catch(error){
-
-    }
-   
-    
-});
 
 
 

@@ -1,7 +1,8 @@
 const config={
-    user:"sa",
-    password:"sam@000000",
-    server:"207.180.212.179",
+    user:"DB_Neonworld",
+    password:"DB_Neo!nwor8ld",
+    // server:"207.180.212.179",
+    server:"144.91.116.25",
     database:"DB_Neonworld",
     options: {
         encrypt:false,
