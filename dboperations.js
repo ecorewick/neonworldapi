@@ -69,7 +69,15 @@ async function adminapi(prod){
 
 
 async function signinapi(prod){
-
+    console.log('login---');
+    console.log(prod.email);
+    console.log(prod.password);
+    console.log(prod.ip);
+    console.log(prod.url);
+    console.log(prod.diviceid);
+    console.log(prod.brand);
+    console.log(prod.divicemodel);
+    console.log('login---');
     try{
             const conn= await sql.connect(config);
             const res =await conn.request()
@@ -105,6 +113,49 @@ async function getmemberdashboard(prod){
   
   }
 
+  async function getprofileadmin(prod){
+
+    try{
+        
+      const conn= await sql.connect(config);
+            const res =await conn.request()
+            .input("MemberID",prod.userId)
+            .execute("USP_GetMemberDetailsByMemberID");
+            return res;
+    }catch(error){
+        console.log(error);
+    }
+
+}
+
+
+async function updateprofileadmin(prod){
+
+
+    try{
+      const conn= await sql.connect(config);
+            const res =await conn.request()
+            .input("TITLE","Mr")
+            .input("DIST","")
+            .input("STATE","")
+            .input("COUNTRY",prod.country)
+            .input("FIRSTNAME",prod.name)
+            .input("ADDRESS",prod.address)
+            .input("CITY",prod.city)
+            .input("PINCODE",prod.pincode)
+            .input("MOBILENO",prod.mobile)
+            .input("EMAILID",prod.email)
+            .input("MemberID",prod.userId)
+            .execute("Usp_editregistration_member");
+            return res;
+    }catch(error){
+        console.log(error);
+    }
+
+}
+
+
+
   async function getCheckSpnsor(prod){
     console.log(prod.userId);
     console.log(prod.memberid);
@@ -137,23 +188,31 @@ async function getmemberdashboard(prod){
             const conn= await sql.connect(config);
             const res =await conn.request()
             .input("SPONSORID",prod.sponserid)
-            .input("INTRODUCERUSEID","")
             .input("TITLE",prod.title)
-            .input("COUNTRY",prod.country)
-            .input("State",prod.state)
+            .input("INTRODUCERUSEID","")
+
             .input("FIRSTNAME",prod.firstname)
-            .input("LastName",prod.lastname)
+            // .input("MIDDLENAME",prod.middlename)
+             .input("SIDE",prod.Side)
+
+            .input("COUNTRY",prod.country)
+           // .input("State",prod.state)
+           
             .input("MOBILENO",prod.mobile)
             .input("EMAILID",prod.email)
-            .input("Address",prod.address)
-            .input("pincode",prod.pincode)
-            .input("city",prod.city)
-            .input("aadharno",prod.aadharno)
-            .input("panno",prod.panno)
+            // .input("Address",prod.address)
+            // .input("pincode",prod.pincode)
+            // .input("city",prod.city)
+            // .input("aadharno",prod.aadharno)
+            // .input("panno",prod.panno)
             .input("PWD",prod.password)
-            .input("paymenttype",prod.paymenttype)
-            .input("btcaddress",prod.btcaddress)
-            .execute("USP_Register");
+
+            .input("IP",prod.IP)
+            .input("DiviceID",prod.DiviceID)
+            .input("DeviceType",prod.DeviceType)
+            .input("DeviceModel",prod.DeviceModel)
+
+            .execute("USP_SaveMemberRegistration");
             return res;
 
 
@@ -166,7 +225,9 @@ async function getmemberdashboard(prod){
 
 async function getwelcome(prod)
 {
-            console.log(prod.memberid);
+    console.log('prod.memberid--1');
+     console.log(prod.memberid);
+     console.log('prod.memberid--2');
           try{
             
             const conn= await sql.connect(config);
@@ -183,10 +244,1134 @@ async function getwelcome(prod)
 }
 
 
+async function updatepassword(prod){
+
+    try{
+        
+        console.log(prod.userId);
+        console.log('update change Req--1');
+        console.log(prod.oldPassword);
+        console.log(prod.newPassword);
+
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+            .input("userid",prod.userId)
+            .input("oldpassword",prod.oldPassword)
+            .input("newpassword",prod.newPassword)
+           
+            .execute("USP_UpdateMemberPassword");
+            return res;
+    }catch(error){
+        console.log(error);
+    }
+
+}
+
+
+async function directteam(prod){
+
+    try{  
+      
+        console.log("My ditects sp--- 1");
+
+
+            console.log(prod.userId);
+            console.log('---from -'+prod.fromdt);
+            console.log('---to -'+prod.todt);
+            console.log(prod.page);
+            console.log(prod.limit);
+          
+
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+
+            .input("Userid",prod.userId)
+            .input("StartDate",prod.fromdt)
+            .input("EndDate",prod.todt)
+            // .input("Status",prod.status)
+            .input("pageno",prod.page)
+            .input("PageSize",prod.limit)
+            .input("RecordCount", 10)
+            .execute("USP_getMydirects_Pagination");
+            return res;
+
+            
+
+    }catch(error){
+        console.log(error);
+    }
+
+}
+
+
+async function teamnetwork(prod){
+
+    try{  
+      
+        console.log("My Geneology sp--- 1");
+
+
+            console.log(prod.userId);
+            console.log('---from -'+prod.fromdt);
+            console.log('---to -'+prod.todt);
+            console.log(prod.level);
+            console.log(prod.side);
+            console.log(prod.searchid);
+            console.log(prod.limit);
+            console.log('---end---');
+
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+
+            .input("Userid",prod.userId)
+            .input("StartDate",prod.fromdt)
+            .input("EndDate",prod.todt)
+            .input("Level",prod.level)
+            // .input("status",prod.status)
+            .input("Side",prod.side)
+            .input("searchid",prod.searchid)
+            .input("pageno",prod.page)
+            .input("PageSize",prod.limit)
+            .input("RecordCount", 10)
+            .execute("USP_GetGenealogy_Pagination");
+            return res;
+
+            
+
+    }catch(error){
+        console.log(error);
+    }
+
+}
+
+async function dailyincome(prod){
+
+    try{  
+      
+        console.log("My ditects sp--- 1");
+
+
+            console.log(prod.userId);
+            console.log('---from -'+prod.fromdt);
+            console.log('---to -'+prod.todt);
+            console.log(prod.page);
+            console.log(prod.limit);
+          
+
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+
+            .input("UserID",prod.userId)
+            .input("StartDate",prod.fromdt)
+            .input("EndDate",prod.todt)
+            .input("pageno",prod.page)
+            .input("PageSize",prod.limit)
+            .input("RecordCount", 10)
+            .execute("USP_GetDailyROI_Pagination");
+            return res;
+
+            
+
+    }catch(error){
+        console.log(error);
+    }
+
+}
+
+
+async function getlevelcommission(prod){
+    
+    try{  
+      
+     
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+
+            .input("Userid",prod.userId)
+            .input("StartDate",prod.fromdt)
+            .input("EndDate",prod.todt)
+            .input("pageno",prod.page)
+            .input("PageSize",prod.limit)
+            .input("RecordCount", 10)
+            .execute("USP_levelCommission_Pagination");
+            return res;
+
+            
+
+    }catch(error){
+        console.log(error);
+    }
+    
+ }
+
+
+
+ async function getpassupincomecommission(prod){
+    
+    try{  
+      
+     
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+
+            .input("Userid",prod.userId)
+            .input("StartDate",prod.fromdt)
+            .input("EndDate",prod.todt)
+
+            .input("pageno",prod.page)
+            .input("PageSize",prod.limit)
+            .input("RecordCount", 10)
+            .execute("USP_GetPassupIncomedtls_Pagination");
+            return res;
+
+            
+
+    }catch(error){
+        console.log(error);
+    }
+    
+ }
+
+
+ async function getbinarycommission(prod){
+    
+    try{  
+      
+     
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+
+            .input("Userid",prod.userId)
+          
+            .input("pageno",prod.page)
+            .input("PageSize",prod.limit)
+            .input("RecordCount", 10)
+            .execute("USP_GetPayoutCommissionDetailsByMemberID_Pagination");
+            return res;
+
+            
+
+    }catch(error){
+        console.log(error);
+    }
+    
+ }
+ async function getbinarytree(prod){
+    console.log('prod.userId')
+    console.log(prod.userId)
+    try{  
+      
+          
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+
+            .input("UserID",prod.userId)
+            .input("option","0")
+
+            .execute("SP_Tree_N");
+            return res;
+
+            
+
+    }catch(error){
+        console.log(error);
+    }
+    
+ }
+
+ async function getgrowthtree(prod){
+    console.log('prod.userId')
+    console.log(prod.userId)
+    try{  
+      
+          
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+
+            .input("UserID",prod.userId)
+            .input("option","0")
+
+            .execute("SP_Tree_N");
+            return res;
+
+            
+
+    }catch(error){
+        console.log(error);
+    }
+    
+ }
+ async function getbalancewallet(prod){
+    console.log('prod.userId')
+    console.log(prod.userId)
+   
+    try{  
+      
+          
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+
+            .input("Userid",prod.userId)
+            .input("wallettype",prod.wallettype)
+
+            .execute("USP_getWalletBalance");
+            return res;
+
+            
+
+    }catch(error){
+        console.log(error);
+    }
+    
+ }
+
+ async function inserttransferfund(prod){
+    console.log('prod.userId')
+    console.log(prod.userId)
+    console.log(prod.Amount)
+    console.log(prod.wallet)
+    console.log(prod.towallet)
+    try{  
+      
+          
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+
+            .input("UserID",prod.userId)
+            .input("AmountRequested",prod.Amount)
+            .input("walletType",prod.wallet)
+            .input("towalletType",prod.towallet)
+            .execute("USP_ClientFundTransfer");
+            return res;
+
+            
+
+    }catch(error){
+        console.log(error);
+    }
+    
+ }
+
+ async function getfundtransferdetails(prod){
+    
+    try{  
+      
+     
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+
+            .input("Userid",prod.userId)
+            .input("StartDate",prod.fromdt)
+            .input("EndDate",prod.todt)
+
+            .input("pageno",prod.page)
+            .input("PageSize",prod.limit)
+            .input("RecordCount", 10)
+            .execute("USP_GetFundTransfer_Pagination");
+            return res;
+
+            
+
+    }catch(error){
+        console.log(error);
+    }
+    
+ }
+
+
+ async function getautoid(prod){
+
+    try{
+        
+        const conn= await sql.connect(config);
+            const res =await conn.request()
+           
+           .execute("Usp_getnewlabelNewID_Deposit");
+            return res;
+    }
+    catch(error){
+        console.log(error);
+    }
+
+}
+
+async function getactivepaymentprovider(prod){
+
+    try{
+        
+        const conn= await sql.connect(config);
+            const res =await conn.request()
+           
+           .execute("usp_getactivepaymentprovider");
+            return res;
+    }
+    catch(error){
+        console.log(error);
+    }
+
+}
+
+async function qrcodechecktimer_depp(prod){
+
+    try{
+        
+        console.log(prod.autoid);
+       
+        const conn= await sql.connect(config);
+            const res =await conn.request()
+            .input("UserID",prod.id)
+            .input("autoid",prod.autoid)  
+            .execute("Usp_checkqrstatus");
+            return res;
+    }catch(error){
+        console.log(error);
+    }
+
+}
+
+
+async function canceltransaction(prod){
+
+    try{
+        
+
+        console.log('cancel transaction Req--1');
+        console.log(prod.id);
+
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+            .input("memberid",decryptedData)
+            .input("autoid",prod.autoid)  
+            .input("remarks","")  
+            .execute("USP_InsertInvestment_invest_cancel");
+            return res;
+    }catch(error){
+        console.log(error);
+    }
+
+}
+
+
+async function getchecktransaction(prod){
+
+    try{
+        
+        console.log('check transaction Req--1');        
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+            .execute("USP_GetPendingTransactionData_deposit_All");
+            return res;
+    }catch(error){
+        console.log(error);
+    }
+
+}
+
+async function getdepositdetails(prod){
+    
+    try{  
+      
+     
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+
+            .input("Userid",prod.userId)
+            .input("StartDate",prod.fromdt)
+            .input("EndDate",prod.todt)
+            .input("pageno",prod.page)
+            .input("PageSize",prod.limit)
+            .input("RecordCount", 10)
+            .execute("USP_getDepositDetails_Pagination");
+            return res;
+
+            
+
+    }catch(error){
+        console.log(error);
+    }
+    
+ }
+
+ //MemberSHIP
+ async function CheckMemberShip(prod){
+    
+    try{  
+      
+            console.log('Check Member ship')
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+
+            .input("UserID",prod.userId)
+
+            .execute("USP_CheckMemberShip");
+            return res;
+
+            
+
+    }catch(error){
+        console.log(error);
+    }
+    
+ }
+ async function CheckMemberShipwithprovider(prod){
+    
+    try{  
+      
+            console.log('Check Member ship')
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+
+            .input("UserID",prod.userId)
+
+            .execute("USP_CheckMemberShipOnload");
+            return res;
+
+            
+
+    }catch(error){
+        console.log(error);
+    }
+    
+ }
+ async function qrcodechecktimer_membership(prod){
+
+    try{
+        
+        console.log(prod.autoid);
+       
+        const conn= await sql.connect(config);
+            const res =await conn.request()
+            .input("UserID",prod.id)
+            .input("autoid",prod.autoid)  
+            .execute("Usp_checkqrstatus_membership");
+            return res;
+    }catch(error){
+        console.log(error);
+    }
+
+}
+
+
+//invest
+ async function getautoid_invest(prod){
+
+    try{
+        
+        const conn= await sql.connect(config);
+            const res =await conn.request()
+           
+           .execute("Usp_getnewlabelNewID");
+            return res;
+    }
+    catch(error){
+        console.log(error);
+    }
+
+}
+
+async function getautoid_membership(prod){
+
+    try{
+        
+        const conn= await sql.connect(config);
+            const res =await conn.request()
+           
+           .execute("Usp_getnewlabelNewID_membership");
+            return res;
+    }
+    catch(error){
+        console.log(error);
+    }
+
+}
+
+async function qrcodechecktimer_invest(prod){
+
+    try{
+        
+        console.log(prod.autoid);
+       
+        const conn= await sql.connect(config);
+            const res =await conn.request()
+            .input("UserID",prod.id)
+            .input("autoid",prod.autoid)  
+            .execute("Usp_checkqrstatus_invest");
+            return res;
+    }catch(error){
+        console.log(error);
+    }
+
+}
+
+async function getinvestreport(prod){
+    
+    try{  
+      
+        console.log(prod.userId);
+        console.log(prod.fromdt);
+        console.log(prod.todt);
+        console.log(prod.page);
+        console.log(prod.limit);
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+
+    
+
+            .input("Userid",prod.userId)
+            .input("StartDate",prod.fromdt)
+            .input("EndDate",prod.todt)
+            .input("pageno",prod.page)
+            .input("PageSize",prod.limit)
+            .input("RecordCount", 10)
+            .execute("USP_GetInvestmentDtls_Pagination");
+            return res;
+
+            
+
+    }catch(error){
+        console.log(error);
+    }
+    
+ }
+//subscription
+ async function getautoid_subscription(prod){
+
+    try{
+        
+        const conn= await sql.connect(config);
+            const res =await conn.request()
+           
+           .execute("Usp_getnewlabelNewID_subscription");
+            return res;
+    }
+    catch(error){
+        console.log(error);
+    }
+
+}
+
+
+async function getsubscriptiondetails(prod){
+    
+    try{  
+      
+     
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+
+            .input("Userid",prod.userId)
+            .input("StartDate",prod.fromdt)
+            .input("EndDate",prod.todt)
+            .input("pageno",prod.page)
+            .input("PageSize",prod.limit)
+            .input("RecordCount", 10)
+            .execute("USP_getSubscriptionDtls_Pagination");
+            return res;
+
+            
+
+    }catch(error){
+        console.log(error);
+    }
+    
+ }
 
 
 
 
+
+
+///////////////////////////////////////////////////////////////////////////////////////
+/////////////*************************   Admin Start  ********************/////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+
+
+async function getmembersearch(prod){
+    
+    try{  
+      
+     
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+
+            .input("Userid",prod.userId)
+            .input("StartDate",prod.fromdt)
+            .input("EndDate",prod.todt)
+            .input("Name",prod.Name)
+            .input("Email",prod.Email)
+            .input("Mobile",prod.Mobile)
+            .input("pageno",prod.page)
+            .input("PageSize",prod.limit)
+            .input("RecordCount", 10)
+            .execute("USP_GetMemberSearchInfo_Pagination");
+            return res;
+
+            
+
+    }catch(error){
+        console.log(error);
+    }
+    
+ }
+
+ async function updateadminpasswordbyadmin(prod){
+
+    try{
+        
+        console.log(prod.userId);
+        console.log('update change Req--1');
+        console.log(prod.oldPassword);
+        console.log(prod.newPassword);
+
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+            .input("userid",prod.userId)
+            .input("oldpassword",prod.oldPassword)
+            .input("newpassword",prod.newPassword)
+               
+            .execute("USP_UpdateAdminPassword");
+            return res;
+    }catch(error){
+        console.log(error);
+    }
+
+}
+
+
+
+async function directteamadmin(prod){
+
+    try{  
+      
+        console.log("My ditects sp--- 1");
+
+
+            console.log(prod.userId);
+            console.log('---from -'+prod.fromdt);
+            console.log('---to -'+prod.todt);
+            console.log(prod.page);
+            console.log(prod.limit);
+          
+
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+
+            .input("Userid",prod.userId)
+            .input("StartDate",prod.fromdt)
+            .input("EndDate",prod.todt)
+            // .input("Status",prod.status)
+            .input("pageno",prod.page)
+            .input("PageSize",prod.limit)
+            .input("RecordCount", 10)
+            .execute("USP_getMydirects_Admin_Pagination");
+            return res;
+
+            
+
+    }catch(error){
+        console.log(error);
+    }
+
+}
+
+async function teamnetworkadmin(prod){
+
+    try{  
+      
+        console.log("My Geneology sp--- 1");
+
+
+            console.log(prod.userId);
+            console.log('---from -'+prod.fromdt);
+            console.log('---to -'+prod.todt);
+            console.log(prod.level);
+            console.log(prod.side);
+            console.log(prod.searchid);
+            console.log(prod.limit);
+            console.log('---end---');
+
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+
+            .input("Userid",prod.userId)
+            .input("StartDate",prod.fromdt)
+            .input("EndDate",prod.todt)
+            .input("Level",prod.level)
+            // .input("status",prod.status)
+            .input("Side",prod.side)
+            .input("searchid","")
+            .input("pageno",prod.page)
+            .input("PageSize",prod.limit)
+            .input("RecordCount", 10)
+            .execute("USP_GetGenealogy_Pagination");
+            return res;
+
+            
+
+    }catch(error){
+        console.log(error);
+    }
+
+}
+
+async function getbinarypayout(){
+
+ 
+    try{
+
+     const conn= await sql.connect(config);
+     const res =await conn.request()
+    .execute("USP_GetPayoutSlots");
+     return res;
+
+    }catch(error){
+        console.log(error);
+    }
+}
+
+async function getbinaryComm_slot(){
+
+ 
+    try{
+
+     const conn= await sql.connect(config);
+     const res =await conn.request()
+     .input("SLOTNO",prod.slotno)
+     .input("pageno",prod.page)
+     .input("PageSize",prod.limit)
+     .input("RecordCount",prod.RecordCount)
+    .execute("USP_GetPayoutCommissionDetails_Pagination");
+     return res;
+
+    }catch(error){
+        console.log(error);
+    }
+}
+async function dailyincomeadmin(prod){
+
+    try{  
+      
+        console.log("My ditects sp--- 1");
+
+
+            console.log(prod.userId);
+            console.log('---from -'+prod.fromdt);
+            console.log('---to -'+prod.todt);
+            console.log(prod.page);
+            console.log(prod.limit);
+          
+
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+
+            .input("UserID",prod.userId)
+            .input("StartDate",prod.fromdt)
+            .input("EndDate",prod.todt)
+            .input("pageno",prod.page)
+            .input("PageSize",prod.limit)
+            .input("RecordCount", 10)
+            .execute("USP_GetDailyROIAdmin_Pagination");
+            return res;
+
+            
+
+    }catch(error){
+        console.log(error);
+    }
+
+}
+
+
+async function getlevelcommissionadmin(prod){
+    
+    try{  
+      
+     
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+
+            .input("Userid",prod.userId)
+            .input("StartDate",prod.fromdt)
+            .input("EndDate",prod.todt)
+            .input("pageno",prod.page)
+            .input("PageSize",prod.limit)
+            .input("RecordCount", 10)
+            .execute("USP_levelCommission_Pagination_admin");
+            return res;
+
+            
+
+    }catch(error){
+        console.log(error);
+    }
+    
+ }
+
+
+
+ async function getpassupincomecommissionadmin(prod){
+    
+    try{  
+      
+     
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+
+            .input("Userid",prod.userId)
+            .input("StartDate",prod.fromdt)
+            .input("EndDate",prod.todt)
+
+            .input("pageno",prod.page)
+            .input("PageSize",prod.limit)
+            .input("RecordCount", 10)
+            .execute("USP_GetPassupIncomedtls_Pagination");
+            return res;
+
+            
+
+    }catch(error){
+        console.log(error);
+    }
+    
+ }
+
+
+ async function getName(prod){
+    console.log(prod.userId);
+    console.log(prod.memberid);
+          try{
+                  const conn= await sql.connect(config);
+                  const res =await conn.request()
+                  .input("sessionid",prod.userId)
+                  .input("userid",prod.memberid)
+                  .execute("USP_CheckDownlineUser");
+                  return res;
+          }catch(error){
+              console.log(error);
+          }
+      
+      }
+      
+
+
+
+  
+async function getbalancebywallet(prod){
+ console.log(prod.userId);
+  console.log(prod.walletType);
+    
+   try{
+         const conn= await sql.connect(config);
+         const res =await conn.request()
+        .input("userid",prod.userId)
+        .input("walletType",prod.walletType)
+        .execute("Usp_GetBalanceby_wallet");
+         return res;
+              }catch(error){
+        console.log(error);
+   }
+          
+ }
+    
+ async function insertfundcredit(prod){
+
+    try{
+        console.log('credit debit  Req--1-1');
+        console.log(prod.userId);
+        console.log(prod.amount);
+        console.log(prod.option);
+        console.log(prod.wallet);
+        console.log('credit debit  Req--1-1');
+       
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+            .input("userid",prod.userId)
+            .input("AMOUNT",prod.amount)
+            .input("OPTION",prod.option)
+            .input("WALLETTYPE",prod.wallet)
+            .input("REMARKS",prod.remarks)
+            .execute("USP_UpdateUserEWalletAmount");
+            return res;
+    }catch(error){
+        console.log(error);
+    }
+
+}
+
+
+async function walletbalancelistbyadmin(prod){
+
+    try{  
+        
+        console.log("Get wallet list  sp--- 1");
+        console.log(prod.userid);
+        console.log(prod.status);
+    
+    
+        const conn= await sql.connect(config);
+        const res =await conn.request()
+    
+        .input("Userid",prod.userid)
+        .input("StartDate","")
+        .input("EndDate","")
+        .input("pageno",prod.page)
+        .input("PageSize",prod.limit)
+        .input("RecordCount", 10)
+        .execute("USP_GetAccountStatement_Admin_Pagination");
+        return res;
+    
+    
+    
+    }catch(error){
+        console.log(error);
+    }
+    
+    }
+    
+async function getministatement(prod){
+    
+        try{  
+          
+        
+            
+                 console.log("Get wallet list-15-12-2024-  sp--- 2");
+
+                 console.log(prod.userid);
+                 console.log(prod.wallet);
+                const conn= await sql.connect(config);
+                const res =await conn.request()
+    
+                .input("Userid",prod.userid)
+                .input("StartDate",prod.starttdate)
+                .input("EndDate",prod.enddate)
+                .input("wallettype",prod.wallet)
+                .input("pageno",prod.page)
+                .input("PageSize",prod.limit)
+                .input("RecordCount", 10)
+                .execute("USP_GetAccountDetails_Admin_Pagination");
+                return res;
+    
+                
+    
+        }catch(error){
+            console.log(error);
+        }
+        
+        
+        
+ }
+
+
+ async function getdepositdetailsadmin(prod){
+    
+    try{  
+      
+     
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+
+            .input("Userid",prod.userId)
+            .input("StartDate",prod.fromdt)
+            .input("EndDate",prod.todt)
+            .input("status",prod.status)
+            .input("pageno",prod.page)
+            .input("PageSize",prod.limit)
+            .input("RecordCount", 10)
+            .execute("USP_getDepositDetails_Pagination_admin");
+            return res;
+
+            
+
+    }catch(error){
+        console.log(error);
+    }
+    
+ }
+
+
+ async function getinvestmentdetailsadmin(prod){
+    
+    try{  
+      
+     
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+
+            .input("Userid",prod.userId)
+            .input("StartDate",prod.fromdt)
+            .input("EndDate",prod.todt)
+            .input("status",prod.status)
+            .input("pageno",prod.page)
+            .input("PageSize",prod.limit)
+            .input("RecordCount", 10)
+            .execute("USP_getInvestmentDetails_Pagination_admin");
+            return res;
+
+            
+
+    }catch(error){
+        console.log(error);
+    }
+    
+ }
+
+ async function getsubscriptiondetailsadmin(prod){
+    
+    try{  
+      
+     
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+
+            .input("Userid",prod.userId)
+            .input("StartDate",prod.fromdt)
+            .input("EndDate",prod.todt)
+            .input("status",prod.status)
+            .input("pageno",prod.page)
+            .input("PageSize",prod.limit)
+            .input("RecordCount", 10)
+            .execute("USP_getSubscriptionDetails_Pagination_admin");
+            return res;
+
+            
+
+    }catch(error){
+        console.log(error);
+    }
+    
+ }
+
+ 
+ async function getmembershipdetailsadmin(prod){
+    
+    try{  
+      
+     
+            const conn= await sql.connect(config);
+            const res =await conn.request()
+
+            .input("Userid",prod.userId)
+            .input("StartDate",prod.fromdt)
+            .input("EndDate",prod.todt)
+            .input("status",prod.status)
+            .input("pageno",prod.page)
+            .input("PageSize",prod.limit)
+            .input("RecordCount", 10)
+            .execute("USP_getMembershipDetails_Pagination_admin");
+            return res;
+
+            
+
+    }catch(error){
+        console.log(error);
+    }
+    
+ }
+
+///////////////////////////////////////////////////////////////////////////////////////
+/////////////*************************   Admin End  ********************/////////////
+///////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -301,63 +1486,8 @@ async function updatwithdrawal(prod){
 
 
 
-async function getName(prod){
-console.log(prod.userId);
-console.log(prod.memberid);
-      try{
-              const conn= await sql.connect(config);
-              const res =await conn.request()
-              .input("sessionid",prod.userId)
-              .input("userid",prod.memberid)
-              .execute("USP_CheckDownlineUser");
-              return res;
-      }catch(error){
-          console.log(error);
-      }
-  
-  }
-  
-  
 
-  async function getbalancebywallet(prod){
-    console.log(prod.userId);
-    console.log(prod.walletType);
 
-          try{
-                  const conn= await sql.connect(config);
-                  const res =await conn.request()
-                  .input("userid",prod.userId)
-                  .input("walletType",prod.walletType)
-                  .execute("Usp_GetBalanceby_wallet");
-                  return res;
-          }catch(error){
-              console.log(error);
-          }
-      
-      }
-
-async function updatepassword(prod){
-
-    try{
-        
-        console.log(prod.userId);
-        console.log('update change Req--1');
-        console.log(prod.oldPassword);
-        console.log(prod.newPassword);
-
-            const conn= await sql.connect(config);
-            const res =await conn.request()
-            .input("userid",prod.userId)
-            .input("oldpassword",prod.oldPassword)
-            .input("newpassword",prod.newPassword)
-           
-            .execute("USP_UpdateMemberPassword");
-            return res;
-    }catch(error){
-        console.log(error);
-    }
-
-}
 
 async function updateadminpwd(prod){
 
@@ -372,46 +1502,6 @@ async function updateadminpwd(prod){
            
         .execute("USP_UpdateAdminPassword");
         return res;    
-    }catch(error){
-        console.log(error);
-    }
-
-}
-async function getprofileadmin(prod){
-
-    try{
-        
-      const conn= await sql.connect(config);
-            const res =await conn.request()
-            .input("MemberID",prod.userId)
-            .execute("USP_GetMemberDetailsByMemberID");
-            return res;
-    }catch(error){
-        console.log(error);
-    }
-
-}
-
-
-async function updateprofileadmin(prod){
-
-
-    try{
-      const conn= await sql.connect(config);
-            const res =await conn.request()
-            .input("TITLE","Mr")
-            .input("DIST","")
-            .input("STATE","")
-            .input("COUNTRY",prod.country)
-            .input("FIRSTNAME",prod.name)
-            .input("ADDRESS",prod.address)
-            .input("CITY",prod.city)
-            .input("PINCODE",prod.pincode)
-            .input("MOBILENO",prod.mobile)
-            .input("EMAILID",prod.email)
-            .input("MemberID",prod.userId)
-            .execute("Usp_editregistration_member");
-            return res;
     }catch(error){
         console.log(error);
     }
@@ -607,112 +1697,8 @@ async function Upgradedetails(prod){
 
 
 
-async function directteam(prod){
-
-    try{  
-      
-        console.log("My ditects sp--- 1");
 
 
-            console.log(prod.userid);
-            console.log('---from -'+prod.fromdt);
-            console.log('---to -'+prod.todt);
-            console.log(prod.page);
-            console.log(prod.limit);
-          
-
-            const conn= await sql.connect(config);
-            const res =await conn.request()
-
-            .input("Userid",prod.userid)
-            .input("StartDate",prod.fromdt)
-            .input("EndDate",prod.todt)
-            .input("Status",prod.status)
-            .input("pageno",prod.page)
-            .input("PageSize",prod.limit)
-            .input("RecordCount", 10)
-            .execute("USP_getMydirects_Pagination");
-            return res;
-
-            
-
-    }catch(error){
-        console.log(error);
-    }
-
-}
-
-
-async function teamnetwork(prod){
-
-    try{  
-      
-        console.log("My Geneology sp--- 1");
-
-
-            console.log(prod.userid);
-            console.log('---from -'+prod.fromdt);
-            console.log('---to -'+prod.todt);
-            console.log(prod.page);
-            console.log(prod.limit);
-          
-
-            const conn= await sql.connect(config);
-            const res =await conn.request()
-
-            .input("Userid",prod.userid)
-            .input("StartDate",prod.fromdt)
-            .input("EndDate",prod.todt)
-            .input("Level",prod.level)
-            .input("status",prod.status)
-            // .input("side",'')
-            .input("pageno",prod.page)
-            .input("PageSize",prod.limit)
-            .input("RecordCount", 10)
-            .execute("USP_GetGenealogy_Pagination");
-            return res;
-
-            
-
-    }catch(error){
-        console.log(error);
-    }
-
-}
-
-async function dailyincome(prod){
-
-    try{  
-      
-        console.log("My ditects sp--- 1");
-
-
-            console.log(prod.userid);
-            console.log('---from -'+prod.fromdt);
-            console.log('---to -'+prod.todt);
-            console.log(prod.page);
-            console.log(prod.limit);
-          
-
-            const conn= await sql.connect(config);
-            const res =await conn.request()
-
-            .input("UserID",prod.userid)
-            .input("StartDate",prod.fromdt)
-            .input("EndDate",prod.todt)
-            .input("pageno",prod.page)
-            .input("PageSize",prod.limit)
-            .input("RecordCount", 10)
-            .execute("USP_GetDailyCommissionDtls_User_Pagination");
-            return res;
-
-            
-
-    }catch(error){
-        console.log(error);
-    }
-
-}
 async function directincome(prod){
 
     try{  
@@ -842,35 +1828,6 @@ try{
 }
 
 }
-async function getministatement(prod){
-    
-        try{  
-          
-        
-            
-              console.log("Get wallet list  sp--- 2");
-                const conn= await sql.connect(config);
-                const res =await conn.request()
-    
-                .input("Userid",prod.userid)
-                .input("StartDate",prod.starttdate)
-                .input("EndDate",prod.enddate)
-                .input("wallettype",prod.wallet)
-                .input("pageno",prod.page)
-                .input("PageSize",prod.limit)
-                .input("RecordCount", 10)
-                .execute("USP_GetAccountDetails_Admin_Pagination");
-                return res;
-    
-                
-    
-        }catch(error){
-            console.log(error);
-        }
-        
-        
-        
-        }
 
 
  async function membersearch(prod){
@@ -1213,27 +2170,7 @@ async function closeticketadmin(prod){
                 
  }
 
-async function insertfundcredit(prod){
 
-    try{
-        
-        console.log(prod.userId);
-        console.log('credit debit  Req--1');
-       
-            const conn= await sql.connect(config);
-            const res =await conn.request()
-            .input("userid",prod.userId)
-            .input("AMOUNT",prod.amount)
-            .input("OPTION",prod.option)
-            .input("WALLETTYPE",prod.wallet)
-            .input("REMARKS",prod.remarks)
-            .execute("USP_UpdateUserEWalletAmount");
-            return res;
-    }catch(error){
-        console.log(error);
-    }
-
-}
 async function getRankNames(){
 
  
@@ -1563,7 +2500,7 @@ async function getwithdrawalbonus(prod){
             .input("Userid",prod.userid)
             .input("StartDate",prod.fromdt)
             .input("EndDate",prod.todt)
-            .input("Status",prod.status)
+            // .input("Status",prod.status)
             .input("pageno",1)
             .input("PageSize",10000)
             .input("RecordCount", 100000)
@@ -1881,7 +2818,7 @@ module.exports ={
     getdashboard:getdashboard,
     updatepassword:updatepassword,
     updateadminpwd:updateadminpwd,
-    getName:getName,
+   
     getwithdrawalstatus:getwithdrawalstatus,
     updatwithdrawal:updatwithdrawal,
 
@@ -1905,7 +2842,7 @@ module.exports ={
     fundtranfer:fundtranfer,
     fundtranferDetails:fundtranferDetails,
     walletbalancelist:walletbalancelist,
-    getministatement:getministatement,
+  
     membersearch:membersearch,
     blockunblock:blockunblock,
     withdrwalrequest:withdrwalrequest,
@@ -1922,7 +2859,7 @@ module.exports ={
     teamwithwalbous:teamwithwalbous,
     getbalancebywallet:getbalancebywallet,
     getSupportReqUserIDlist:getSupportReqUserIDlist,
-    insertfundcredit:insertfundcredit,
+
     upgradeadmin:upgradeadmin,
     Supporttokenlistbyuserid:Supporttokenlistbyuserid,
     getchatbyadmin:getchatbyadmin,
@@ -1954,9 +2891,62 @@ module.exports ={
     getadminaddress:getadminaddress,
     Upgradedetailsbymob:Upgradedetailsbymob,
     insertchatbyuser:insertchatbyuser,
-    supporttokenlistbyUseridmob:supporttokenlistbyUseridmob
+    supporttokenlistbyUseridmob:supporttokenlistbyUseridmob,
    
 
 
-   
+
+
+    getlevelcommission:getlevelcommission,
+    getpassupincomecommission:getpassupincomecommission,
+    getbinarycommission:getbinarycommission,
+    getbinarytree:getbinarytree,
+    getgrowthtree:getgrowthtree,
+    getbalancewallet:getbalancewallet,
+    inserttransferfund:inserttransferfund,
+    getfundtransferdetails:getfundtransferdetails,
+    getautoid:getautoid,
+    getactivepaymentprovider:getactivepaymentprovider,
+    qrcodechecktimer_depp:qrcodechecktimer_depp,
+    canceltransaction:canceltransaction,
+    getchecktransaction:getchecktransaction,
+    getdepositdetails:getdepositdetails,
+    CheckMemberShip:CheckMemberShip,
+    getautoid_invest:getautoid_invest,
+    getautoid_membership:getautoid_membership,
+    CheckMemberShipwithprovider:CheckMemberShipwithprovider,
+
+    qrcodechecktimer_membership:qrcodechecktimer_membership,
+    qrcodechecktimer_invest:qrcodechecktimer_invest,
+    getinvestreport:getinvestreport,
+    getautoid_subscription:getautoid_subscription,
+    getsubscriptiondetails:getsubscriptiondetails,
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////
+/////////////*************************   Admin Start  ********************/////////////
+///////////////////////////////////////////////////////////////////////////////////////
+
+    getmembersearch:getmembersearch,
+    updateadminpasswordbyadmin:updateadminpasswordbyadmin,
+    directteamadmin:directteamadmin,
+    teamnetworkadmin:teamnetworkadmin,
+    getbinarypayout:getbinarypayout,
+    getbinaryComm_slot:getbinaryComm_slot,
+    dailyincomeadmin:dailyincomeadmin,
+    getlevelcommissionadmin:getlevelcommissionadmin,
+    getpassupincomecommissionadmin:getpassupincomecommissionadmin,
+    getName:getName,
+    insertfundcredit:insertfundcredit,
+    walletbalancelistbyadmin:walletbalancelistbyadmin,
+    getministatement:getministatement,
+    getdepositdetailsadmin:getdepositdetailsadmin,
+    getinvestmentdetailsadmin:getinvestmentdetailsadmin,
+    getsubscriptiondetailsadmin:getsubscriptiondetailsadmin,
+    getmembershipdetailsadmin:getmembershipdetailsadmin
+
+///////////////////////////////////////////////////////////////////////////////////////
+/////////////*************************   Admin End  ********************/////////////
+///////////////////////////////////////////////////////////////////////////////////////
 }
